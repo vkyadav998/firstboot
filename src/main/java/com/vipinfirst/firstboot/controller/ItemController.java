@@ -2,10 +2,12 @@ package com.vipinfirst.firstboot.controller;
 
 import com.vipinfirst.firstboot.model.Item;
 import com.vipinfirst.firstboot.repository.ItemRepository;
+import com.vipinfirst.firstboot.service.ItemService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,8 +17,31 @@ public class ItemController {
     @Autowired
     private ItemRepository itemRepository;
 
-    @GetMapping
+    @Autowired
+    private ItemService itemService;
+
+    private static final Logger FBLogger = LoggerFactory.getLogger("firstboot");
+
+    @GetMapping("/getItems")
     public List<Item> getAllItems() {
-        return itemRepository.findAll();
+        try {
+            FBLogger.info("[ITEM CONTROLLER] Fetching Items");
+            return itemRepository.findAll();
+        }catch (Exception e){
+            FBLogger.error("[ITEM CONTROLLER] Error in fetching items : \n", e);
+        }
+        return null;
+    }
+
+    @PostMapping("/addItem")
+    public ResponseEntity<Item> addItemInList(@RequestBody Item item){
+        try {
+            FBLogger.info("[ITEM CONTROLLER] Adding Items : [{}]\n", item);
+            return itemService.addItem(item);
+        }catch (Exception e){
+            FBLogger.error("[ITEM CONTROLLER] Error in adding items : [{}]\n", item, e);
+        }
+        return null;
     }
 }
+
