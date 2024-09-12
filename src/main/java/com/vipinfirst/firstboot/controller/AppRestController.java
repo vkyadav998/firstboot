@@ -10,6 +10,7 @@ public class AppRestController {
 
     @GetMapping("/hello")
     public String sayHello() {
+        TestController.TestFunction();
         return "Hello, World!";
     }
 }

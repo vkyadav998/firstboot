@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+	         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] [%file:%line] [%M] - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FIRSTBOOT-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] [%file:%line] [%M] - %msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover every hour -->
+            <FileNamePattern>logs/fb-firstboot-%d{yyyy-MM-dd_HH}_00.log</FileNamePattern>
+            <!-- keep 30 minutes' worth of history -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+<!--    &lt;!&ndash; Console appender configuration &ndash;&gt;-->
+<!--    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%M:%L - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+<!--    &lt;!&ndash; Root logger configuration &ndash;&gt;-->
+<!--    <root level="debug">-->
+<!--        <appender-ref ref="STDOUT" />-->
+<!--    </root>-->
+
+<!--    &lt;!&ndash; Optionally, define specific package-level logging &ndash;&gt;-->
+<!--    <logger name="com.example.demo" level="debug" />-->
+
+
+    <logger name="firstboot" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FIRSTBOOT-FILE"/>
+    </logger>
+
+    <springProfile name="prod">
+        <root level="ERROR">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FIRSTBOOT-FILE"/>
+        </root>
+    </springProfile>
+
+
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FIRSTBOOT-FILE"/>
+        </root>
+    </springProfile>
+</configuration>
